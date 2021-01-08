@@ -40,15 +40,9 @@
 				<td><form:label path="cnumber">Card Number: </form:label></td>
 				<td><form:label id="lbl-cardnumber" path="cnumber">${card.cnumber }</form:label></td>
 			</tr>
-			<%-- <tr>
-				<td><form:label path="expiryDate">Expiry on: </form:label></td>
-				<td><form:label id="lbl-expiry" path="expiryDate"
-						value="${card.expiryDate }" /> <fmt:formatDate
-						value="${card.expiryDate}" pattern="MM/yyyy" /></td>
-			</tr> --%>
 			<tr>
 				<td><form:label path="cardBal">Card Balance: </form:label></td>
-				<td><form:label id="lbl-cardbalance" path="cardBal"
+				<td><form:label id="lbl-card-balance" path="cardBal"
 						value="${card.cardBal }">${card.cardBal }</form:label></td>
 			</tr>
 			<tr>

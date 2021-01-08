@@ -62,9 +62,7 @@ public class Card {
 	}
 
 	public void setCnumber(String cnumber) {
-		StringBuilder mynum;
-		mynum = new StringBuilder(cnumber);
-		mynum = new StringBuilder("");
+		StringBuilder mynum = new StringBuilder("");
 		Random rand = new Random();
 		for (int i = 1; i < 20; i++) {
 			if (i % 5 == 0)

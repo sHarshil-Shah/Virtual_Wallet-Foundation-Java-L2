@@ -25,7 +25,7 @@
 
 					<a href="javascript:document.topupcardForm.submit()">Topup Card</a>
 				</form:form></td>
-			<td><a href="login">Logout</a></td>
+			<td><a href="../login">Logout</a></td>
 		</tr>
 	</table>
 

@@ -1,7 +1,7 @@
 package com.wipro.dao;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import com.wipro.bean.Card;
 import com.wipro.bean.User;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -45,7 +44,6 @@ public class CardDAO {
 	}
 
 	public Card updateCard(Card p, int topupamount) {
-		// System.out.println("update card: " + p);
 		Session session = sessionFactory.openSession();
 		Transaction tran = session.beginTransaction();
 		Card oldCard = session.load(Card.class, p.getCardid());
@@ -67,13 +65,18 @@ public class CardDAO {
 	public Card getCardById(int id) {
 		Session session = sessionFactory.openSession();
 		Card p = (Card) session.load(Card.class, id);
-//		// System.out.println("Card by ID " + id + ": " + p);
 		return p;
 	}
 
 	public List<Card> getCardsByuId(int uid) {
 		List<Card> cards = hibernateTemplate.loadAll(Card.class);
-		return cards.stream().filter(p -> p.getUser().getUserid() == uid).collect(Collectors.toList());
+		List<Card> specificCards = new ArrayList<>();
+		for (Card c : cards) {
+			if (c.getUser().getUserid() == uid) {
+				specificCards.add(c);
+			}
+		}
+		return specificCards;
 	}
 
 	public int getBalByuId(int uid) {

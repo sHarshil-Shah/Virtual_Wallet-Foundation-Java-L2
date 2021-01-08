@@ -36,19 +36,19 @@ public class CardController {
 		return "card";
 	}
 
-	// For add and update card both
 	@RequestMapping(value = "/card/add", method = RequestMethod.POST)
 	public String addCard(@ModelAttribute("card") Card p, ModelMap model, RedirectAttributes ra,
 			HttpServletRequest request) {
-		if (p.getCname() == null && p.getCardBal() == 0) {
+		String redirectError = "redirect:../create_card/error";
+		if (p.getCname().equals("") && p.getCardBal() == 0) {
 			ra.addFlashAttribute("msg", "Virtual card creation Failed, Invalid card name and amount");
-			return "redirect:../create_card/error";
-		} else if (p.getCname() == null) {
+			return redirectError;
+		} else if (p.getCname().equals("")) {
 			ra.addFlashAttribute("msg", " Virtual card creation Failed, Invalid card name");
-			return "redirect:../create_card/error";
+			return redirectError;
 		} else if (p.getCardBal() == 0) {
-			ra.addFlashAttribute("msg", " Virtual card creation Failed, Invalid amoun");
-			return "redirect:../create_card/error";
+			ra.addFlashAttribute("msg", " Virtual card creation Failed, Invalid amount");
+			return redirectError;
 		}
 		int uid = p.getUser().getUserid();
 		model.put("card", p);
@@ -59,14 +59,13 @@ public class CardController {
 			request.getSession().setAttribute("user", p.getUser());
 			ra.addFlashAttribute("card", p);
 			return "redirect:../create_card/success";
-			// return "createCardSuccess";
 		} else if (p.getCardBal() > 10000) {
 			ra.addFlashAttribute("msg",
 					"Virtual card creation Failed, Total amount exceeds the maximum limit (INR 10,000) allowed");
-			return "redirect:../create_card/error";
+			return redirectError;
 		} else {
 			ra.addFlashAttribute("msg", "Sorry, there was an error encountered, try again later");
-			return "redirect:../create_card/error";
+			return redirectError;
 		}
 	}
 
@@ -85,8 +84,20 @@ public class CardController {
 	@RequestMapping("/editCard/{id}")
 	public String editCard(@PathVariable("id") int id, @ModelAttribute("card") Card card, RedirectAttributes ra,
 			HttpServletRequest request) {
+		String redirectError = "redirect:../topup_card/error";
+		System.out.println(card);
+		if (card.getCardid() == 0 && card.getCardBal() == 0) {
+			ra.addFlashAttribute("msg", "TopUp Failed, Invalid card name and amount");
+			return redirectError;
+		} else if (card.getCardid() == 0) {
+			ra.addFlashAttribute("msg", "TopUp Failed");
+			return redirectError;
+		} else if (card.getCardBal() == 0) {
+			ra.addFlashAttribute("msg", "TopUp Failed, Invalid amount");
+			return redirectError;
+		}
+
 		Card oldCard = this.cardDAO.getCardById(id);
-		// System.out.println("OLD card:" + oldCard.toString());
 		if (oldCard.getCardBal() + card.getCardBal() <= 10000) {
 			oldCard = this.cardDAO.updateCard(oldCard, card.getCardBal());
 			request.getSession().setAttribute("user", oldCard.getUser());
@@ -94,10 +105,10 @@ public class CardController {
 			return "redirect:/topup_card/success";
 		} else if (oldCard.getCardBal() + card.getCardBal() > 10000) {
 			ra.addFlashAttribute("msg", "TopUp Failed, Total amount exceeds the maximum limit(INR 10000) allowed");
-			return "redirect:../topup_card/error";
+			return redirectError;
 		} else {
 			ra.addFlashAttribute("msg", "Sorry, there was an error encountered, try again later");
-			return "redirect:../topup_card/error";
+			return redirectError;
 		}
 	}
 
@@ -105,11 +116,9 @@ public class CardController {
 	public ModelAndView viewCards(@ModelAttribute("user") User user, @ModelAttribute("card") Card card,
 			HttpServletRequest request) {
 		User user1 = (User) request.getSession().getAttribute("user");
-//		// System.out.println("User from session: " + user1);
 		int uid = user1.getUserid();
 		ModelAndView mv = new ModelAndView("viewcards");
 		List<Card> allCards = this.cardDAO.getCardsByuId(uid);
-		// System.out.println("Card size: " + allCards.size());
 		mv.addObject("cards", allCards);
 		mv.addObject("uid", uid);
 
@@ -122,10 +131,8 @@ public class CardController {
 	public ModelAndView topupCard(HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute("user");
 		int uid = user.getUserid();
-		// System.out.println("Dashboard: Top Up Card: UserID: " + uid);
 		ModelAndView mv = new ModelAndView("topupcard");
 		List<Card> cardList = this.cardDAO.getCardsByuId(uid);
-		// System.out.println("Card size: " + cardList.size());
 		mv.addObject("cardList", cardList);
 		mv.addObject("uid", uid);
 		mv.addObject("bal", user.getBal());

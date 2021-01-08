@@ -65,12 +65,10 @@ public class UserController {
 		return "user";
 	}
 
-	// For add and update user both
 	@RequestMapping(value = "/user/add", method = RequestMethod.POST)
 	public String addUser(@ModelAttribute("user") User p) {
 
 		if (p.getUserid() == 0) {
-			// new user, add it
 			this.userDAO.addUser(p);
 		} else {
 			// existing user, call update
