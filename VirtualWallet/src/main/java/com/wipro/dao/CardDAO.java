@@ -64,8 +64,7 @@ public class CardDAO {
 
 	public Card getCardById(int id) {
 		Session session = sessionFactory.openSession();
-		Card p = (Card) session.load(Card.class, id);
-		return p;
+		return (Card) session.load(Card.class, id);
 	}
 
 	public List<Card> getCardsByuId(int uid) {

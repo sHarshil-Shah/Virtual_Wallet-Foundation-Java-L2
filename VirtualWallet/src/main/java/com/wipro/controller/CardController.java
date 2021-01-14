@@ -85,7 +85,6 @@ public class CardController {
 	public String editCard(@PathVariable("id") int id, @ModelAttribute("card") Card card, RedirectAttributes ra,
 			HttpServletRequest request) {
 		String redirectError = "redirect:../topup_card/error";
-		System.out.println(card);
 		if (card.getCardid() == 0 && card.getCardBal() == 0) {
 			ra.addFlashAttribute("msg", "TopUp Failed, Invalid card name and amount");
 			return redirectError;

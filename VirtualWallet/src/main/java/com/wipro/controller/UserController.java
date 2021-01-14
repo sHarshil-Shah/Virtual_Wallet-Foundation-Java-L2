@@ -54,8 +54,7 @@ public class UserController {
 
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public ModelAndView gotoDashboard(HttpServletRequest request) {
-		ModelAndView mv = new ModelAndView("dashboard", "user", request.getSession().getAttribute("user"));
-		return mv;
+		return new ModelAndView("dashboard", "user", request.getSession().getAttribute("user"));
 	}
 
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
